@@ -16,7 +16,7 @@ class Settings(BaseSettings):
 
     # Local LLM (Ollama or any OpenAI-compatible server)
     llm_base_url: str = "http://localhost:11434/v1"
-    llm_model: str = "llama3.1:8b"
+    llm_model: str = "llama3.2:1b"
     llm_api_key: str = "ollama"   # Ollama ignores this but openai SDK requires a non-empty value
 
     # Paths

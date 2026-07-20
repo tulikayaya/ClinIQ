@@ -39,7 +39,7 @@ export default function ChatWindow() {
     <div className="chat-window">
       <div className="message-list">
         {messages.map((msg, i) => (
-          <MessageBubble key={i} role={msg.role} content={msg.content} />
+          <MessageBubble key={i} role={msg.role} content={msg.content} cases={msg.cases ?? []} />
         ))}
         {loading && (
           <div className="bubble assistant loading">

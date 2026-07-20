@@ -1,28 +1,39 @@
+from __future__ import annotations
+import shutil
+
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from fastapi.responses import FileResponse
+from starlette.background import BackgroundTask
+
 from services.dicom_converter import convert_dicom_to_nifti
-import tempfile, os
 
 router = APIRouter()
+
+ZIP_MAGIC = b'PK\x03\x04'
 
 
 @router.post("/dicom")
 async def convert_dicom(file: UploadFile = File(...)):
     """
-    Accept a zip of DICOM files, convert to NIfTI via dcm2niix,
-    return the .nii.gz for download.
+    Accept a ZIP of DICOM files, convert to NIfTI with SimpleITK,
+    return converted.nii.gz for download. Temp dir is cleaned up after response.
     """
-    if not file.filename.endswith(".zip"):
-        raise HTTPException(status_code=400, detail="Upload a .zip of DICOM files.")
-
     zip_bytes = await file.read()
-    output_path = convert_dicom_to_nifti(zip_bytes)
 
-    if output_path is None:
-        raise HTTPException(status_code=500, detail="Conversion failed.")
+    if len(zip_bytes) < 4 or zip_bytes[:4] != ZIP_MAGIC:
+        raise HTTPException(
+            status_code=400,
+            detail="File is not a valid ZIP archive. Upload a .zip of DICOM files.",
+        )
 
+    result = convert_dicom_to_nifti(zip_bytes)
+    if result is None:
+        raise HTTPException(status_code=500, detail="DICOM conversion failed.")
+
+    output_path, work_dir = result
     return FileResponse(
         path=output_path,
         media_type="application/gzip",
         filename="converted.nii.gz",
+        background=BackgroundTask(shutil.rmtree, work_dir, ignore_errors=True),
     )

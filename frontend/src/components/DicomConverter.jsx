@@ -19,7 +19,7 @@ export default function DicomConverter() {
       a.click();
       URL.revokeObjectURL(url);
     } catch (e) {
-      setError("Conversion failed. Make sure dcm2niix is installed.");
+      setError(e.message || "Conversion failed.");
     } finally {
       setLoading(false);
     }

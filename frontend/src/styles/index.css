@@ -183,9 +183,70 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 .image-slices { display: flex; gap: 8px; }
 
 .slice-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.slice-wrap img { width: 100px; height: 100px; object-fit: cover; border-radius: 4px; border: 1px solid var(--border); }
+.slice-thumb {
+  width: 100px; height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s;
+}
+.slice-thumb:hover { border-color: var(--accent); transform: scale(1.04); }
 .slice-label    { font-size: 10px; color: var(--muted); text-transform: uppercase; }
 .slice-error, .slice-loading { font-size: 12px; color: var(--muted); }
+
+/* ── Lightbox ──────────────────────────────── */
+.lb-backdrop {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0, 0, 0, 0.88);
+  display: flex; align-items: center; justify-content: center;
+  gap: 16px;
+}
+
+.lb-content {
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  max-width: 80vw;
+}
+
+.lb-img {
+  max-width: 75vw; max-height: 75vh;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+}
+
+.lb-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  width: 100%; gap: 16px;
+}
+.lb-label   { font-size: 13px; color: var(--text); text-transform: capitalize; }
+.lb-counter { font-size: 12px; color: var(--muted); white-space: nowrap; }
+
+.lb-arrow {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  font-size: 22px;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.lb-arrow:hover { background: rgba(255,255,255,0.2); opacity: 1; }
+
+.lb-close {
+  position: fixed; top: 18px; right: 22px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  font-size: 16px;
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.lb-close:hover { background: rgba(255,255,255,0.25); opacity: 1; }
 
 /* ── Upload tab ────────────────────────────── */
 .upload-tab {
